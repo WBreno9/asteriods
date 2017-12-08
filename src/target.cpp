@@ -28,6 +28,8 @@ void Target::Update()
 		isDead = true;
 	}
 
+	pos += 0.5f * delta;
+
 	UpdateMatrix();
 	UpdateVectors();
 }
