@@ -10,6 +10,7 @@ public:
 	{
 		pos = a;
 		rotation = b;	
+		size = 1.0f;
 		visible = true;
 		lifeTime = 1.0f;
 

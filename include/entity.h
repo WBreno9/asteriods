@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <random>
 #include <cmath>
 #include <cstdlib>
 
@@ -23,6 +24,7 @@ class Entity
 public:
 	static GLFWwindow* window;
 	static float delta;
+	static glm::vec2 playArea;
 	
 	bool isDead;
 	float lifeTime;
@@ -33,6 +35,7 @@ public:
 	glm::vec2 pos;
 	glm::vec2 forward;
 	float rotation;
+	float size;
 
 	float DeAccelMul;
 	glm::vec2 accelDir;
@@ -58,6 +61,7 @@ public:
 	void UpdateMatrix();
 	void UpdateVectors();
 
+	bool OutsideOfPlayArea(bool adjust);
 	void CalculateBBox();
 	bool TestBBoxCollision(Entity*);
 	bool TestLineSegCollision(Entity*, glm::vec2&);
@@ -78,7 +82,10 @@ private:
 	Entity* next;
 
 	static Entity* tail;
-    static Entity* head;  
+	static Entity* head;  
+	
+	void DrawBoundingBox();
+	static void DrawPlayArea();
 };
 
 #endif

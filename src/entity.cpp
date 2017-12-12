@@ -1,13 +1,16 @@
 #include <entity.h>
 
 namespace {
-    bool line_seg_debug = false;
+	bool line_seg_debug = false;
+	bool debug_bb = false;
+	bool debug_play_area = false;
 }
 
 Entity* Entity::tail = nullptr;
 Entity* Entity::head = nullptr;
 GLFWwindow* Entity::window = nullptr;
 float Entity::delta = 0;
+glm::vec2 Entity::playArea = glm::vec2(1.0f);
 
 Entity::Entity() 
 {
@@ -73,6 +76,11 @@ void Entity::UpdateAll()
 		}
 
 		ent->CalculateBBox();
+		if (debug_bb) ent->DrawBoundingBox();
+
+		ent->OutsideOfPlayArea(true);
+		if (debug_play_area) DrawPlayArea();
+
 		ent->Update();
 	}
 	ReapDeadEntities();
@@ -88,6 +96,7 @@ void Entity::UpdateMatrix()
 					glm::vec3(pos, 0.0f));
 	model_matrix = glm::rotate(model_matrix, rotation, 
 					glm::vec3(0.0f, 0.0f, 1.0f));
+	model_matrix = glm::scale(model_matrix, glm::vec3(size));
 }
 
 void Entity::UpdateVectors()
@@ -149,6 +158,24 @@ void Entity::CalculateBBox()
 	BBoxMin = bbmi;
 }
 
+bool Entity::OutsideOfPlayArea(bool adjust)
+{
+	if (BBoxMin.x + pos.x > playArea.x) {	
+		if (adjust) pos.x = -(BBoxMin.x + pos.x + BBoxMax.x);
+	} else if (BBoxMax.x + pos.x < -playArea.x) {	
+		if (adjust) pos.x = -(BBoxMax.x + pos.x + BBoxMin.x);
+	} else if (BBoxMin.y + pos.y > playArea.y) {	
+		if (adjust) pos.y = -(BBoxMin.y + pos.y + BBoxMax.y);
+	} else if (BBoxMax.y + pos.y < -playArea.y) {	
+		if (adjust) pos.y = -(BBoxMax.y + pos.y + BBoxMin.y);
+	} else {
+		return false;
+	}
+
+	return true;
+	
+}
+
 bool Entity::TestBBoxCollision(Entity* ent)
 {
 	if (ent == nullptr)
@@ -172,8 +199,8 @@ bool Entity::TestLineSegCollision(Entity* ent, glm::vec2& p)
 	glm::vec2 p1, p2, q1, q2;
 	for (int i = 0; i < vertices.size() - 1; i++) {
 
-		p1 = glm::rotate(vertices[i], rotation) + pos;
-		p2 = glm::rotate(vertices[i+1], rotation) + pos;
+		p1 = glm::rotate(vertices[i] * size, rotation) + pos;
+		p2 = glm::rotate(vertices[i+1] * size, rotation) + pos;
 
 		for (int j = 0; j < ent->vertices.size() - 1; j++) {
 
@@ -196,7 +223,7 @@ Entity* Entity::FindByType(std::string arg)
 	for (Entity* ent = Entity::GetHead(); ent != nullptr;
 		ent = ent->GetNext()) 
 	{
-		if (ent->GetTypeString() == arg)
+		if (ent->GetTypeString() == arg && ent != this)
 			return ent;
 	}
 
@@ -224,4 +251,26 @@ Entity* Entity::FindNearestByType(std::string arg)
 	}
 
 	return nearest;
+}
+
+void Entity::DrawBoundingBox()
+{
+	glBegin(GL_LINE_LOOP);
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glVertex3f(BBoxMax.x + pos.x, BBoxMax.y + pos.y, 0.0f);
+	glVertex3f(BBoxMax.x + pos.x, BBoxMin.y + pos.y, 0.0f);
+	glVertex3f(BBoxMin.x + pos.x, BBoxMin.y + pos.y, 0.0f);
+	glVertex3f(BBoxMin.x + pos.x, BBoxMax.y + pos.y, 0.0f);
+	glEnd();
+}
+
+void Entity::DrawPlayArea()
+{
+	glBegin(GL_LINE_LOOP);
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(playArea.x, playArea.y, 0.0f);
+	glVertex3f(playArea.x, -playArea.y, 0.0f);
+	glVertex3f(-playArea.x, -playArea.y, 0.0f);
+	glVertex3f(-playArea.x, playArea.y, 0.0f);
+	glEnd();
 }

@@ -10,6 +10,9 @@ void Projectile::SetProjPoly()
 
 void Projectile::Update()
 {
+	if (OutsideOfPlayArea(false))
+		isDead = true;
+	
 	Entity* ent = FindNearestByType("Target");
 	glm::vec2 k;
 	if (TestLineSegCollision(ent, k)) {

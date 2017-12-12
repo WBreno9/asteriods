@@ -47,6 +47,8 @@ void Game::start()
     delta = 0;
     pastTime = 0;
 	currentTime = 0;
+
+	Entity::playArea = glm::vec2(1.0f, 0.7f);
 	
 	restart();
     mainLoop();
@@ -86,6 +88,8 @@ void Game::mainLoop()
 		int height, width;
 		glfwGetFramebufferSize(window, &width, &height);
 		float ratio = width / (float)height;	
+
+		Entity::playArea = glm::vec2(ratio, 1.0f);
 
 		glClear(GL_COLOR_BUFFER_BIT);
 		glViewport(0, 0, width, height);		

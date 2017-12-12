@@ -5,6 +5,8 @@ Ship::Ship()
 	pos = glm::vec2(0.0f);
 	forward = glm::vec2(0.0f, 1.0f);
 	accelDir = glm::vec2(0.0f);
+	size = 1.0f;
+	
 	rotation = 0.0f;
 	SetShipPoly();
 	CalculateBBox();

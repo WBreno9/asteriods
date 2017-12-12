@@ -6,6 +6,8 @@
 class Target : public Entity
 {
 public:
+	glm::vec2 movDir;
+	
 	Target(glm::vec2 a);
 	
 	std::string GetTypeString() { return "Target"; }
