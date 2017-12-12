@@ -49,7 +49,7 @@ void Game::start()
 	currentTime = 0;
 
 	Entity::playArea = glm::vec2(1.0f, 0.7f);
-	
+
 	restart();
     mainLoop();
 }
@@ -67,6 +67,8 @@ void Game::restart()
 {
 	Entity::SetAllDead();
 	Entity::ReapDeadEntities();
+
+	Target::score = 0;
 
 	Ship* sp = new Ship();
 
@@ -116,7 +118,7 @@ void Game::mainLoop()
 		
 		glfwSwapBuffers(window);
 		glfwSetWindowTitle(window, 
-			std::to_string(1.0f / delta).c_str());
+			std::to_string(Target::score).c_str());
 	
 		}
 }

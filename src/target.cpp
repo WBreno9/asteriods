@@ -1,5 +1,7 @@
 #include <target.h>
 
+unsigned Target::score = 0;
+
 Target::Target(glm::vec2 a)
 {
 	pos = a;
@@ -103,5 +105,7 @@ void Target::Damage(unsigned d)
 	if (health <= 0) {
 		Separate();
 		isDead = true;
+
+		score += std::ceil(size) * 5;
 	}
 }

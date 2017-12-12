@@ -8,6 +8,7 @@
 class Target : public Entity
 {
 public:
+	static unsigned score;
 	glm::vec2 movDir;
 	
 	Target(glm::vec2 a);
