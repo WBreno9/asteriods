@@ -68,13 +68,21 @@ void Game::restart()
 	Entity::SetAllDead();
 	Entity::ReapDeadEntities();
 
-	new Ship();
+	Ship* sp = new Ship();
+
+	std::mt19937 rnd(std::random_device{}());
+	std::uniform_real_distribution<float> dX(-Entity::playArea.x, Entity::playArea.x);
+	std::uniform_real_distribution<float> dY(-Entity::playArea.y, Entity::playArea.y);
 
 	std::srand((int)(glfwGetTime() * 1000));
 	for (int i = 0; i < 20; i++) {
-		new Target(glm::vec2((std::rand() % 2666 - 1333) / (float)1000.0f, 
-			(std::rand() % 1800 - 900) / (float)1000.0f));
+		glm::vec2 pos(dX(rnd), dY(rnd));
+
+		if (glm::length(pos) > 0.1f)
+			new Target(pos);
 	}
+
+	if (sp->isDead) restart();
 }
 
 void Game::mainLoop()

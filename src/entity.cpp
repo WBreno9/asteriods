@@ -132,6 +132,14 @@ void Entity::Draw()
 		GUtils::drawLineSegDebug();
 }
 
+void Entity::Damage(unsigned d)
+{
+	health -= d;
+
+	if (health <= 0) 
+		isDead = true;
+}
+
 void Entity::CalculateBBox()
 {
 	if (vertices.empty())
@@ -195,6 +203,10 @@ bool Entity::TestLineSegCollision(Entity* ent, glm::vec2& p)
 	if (!TestBBoxCollision(ent) || vertices.empty() || 
 						ent->vertices.empty())
 		return false;
+
+
+	/* TODO */
+	/* Fix line segment intersection */
 
 	glm::vec2 p1, p2, q1, q2;
 	for (int i = 0; i < vertices.size() - 1; i++) {

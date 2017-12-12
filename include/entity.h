@@ -28,6 +28,10 @@ public:
 	
 	bool isDead;
 	float lifeTime;
+
+	int health;
+	int maxHealth;
+
 	bool visible;
 
 	std::vector<glm::vec2> vertices;
@@ -56,6 +60,8 @@ public:
 	virtual std::string GetTypeString() = 0;
 
 	virtual void Update() = 0;
+
+	virtual void Damage(unsigned d);
 
 	void Draw();
 	void UpdateMatrix();

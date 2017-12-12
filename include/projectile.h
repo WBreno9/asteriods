@@ -2,6 +2,7 @@
 #define PROJECTILE_H
 
 #include <entity.h>
+#include <target.h>
 
 class Projectile : public Entity
 {

@@ -14,9 +14,9 @@ void Projectile::Update()
 		isDead = true;
 	
 	Entity* ent = FindNearestByType("Target");
-	glm::vec2 k;
-	if (TestLineSegCollision(ent, k)) {
-		ent->isDead = true;
+	if (TestBBoxCollision(ent)) {
+		ent->Damage(200);
+
 		isDead = true;
 		
 		return;
